@@ -16,7 +16,7 @@ class Teleop{
     Teleop(){
       this->vel_pub = this->nh.advertise<geometry_msgs::Twist>("/rover", 20);
       this->color_pub = this->nh.advertise<std_msgs::Int32>("/led", 20);
-      this->sub = this->nh.subscribe("/joy", 20, &Teleop::joyCallback, this);
+      this->sub = this->nh.subscribe("/joy0", 20, &Teleop::joyCallback, this);
     }
 
     void teleop(float linear, float rotational){
