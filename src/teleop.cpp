@@ -43,7 +43,7 @@ class Teleop{
 };
 
 int main(int argc, char **argv){
-  ros::init(argc, argv, "manual_control", ros::init_options::AnonymousName);
+  ros::init(argc, argv, "teleop", ros::init_options::AnonymousName);
   Teleop teleop = Teleop();
   ros::spin();
   return 0;
