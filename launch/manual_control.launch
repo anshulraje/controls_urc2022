@@ -10,4 +10,6 @@
     </node>
 
     <node name="teleop" pkg="urc2022" type="teleop"/>
+    <node name="actuators" pkg="urc2022" type="manualcontrol.py"/>
+    <node name="othermotors" pkg="urc2022" type="othermotors.py"/>
 </launch>
