@@ -7,14 +7,13 @@ import os
 hostname = "192.168.1.11" 
 
 def check_connection():
-    while(True):
-        response = os.system("ping -c 1 -W 3 " + hostname)
-        if response == 0:
-            print(hostname, 'is up!')
-        else:
-            print("Connection lost, stopped rover")
-            pub.publish(Twist())
-        rate.sleep()
+    response = os.system("ping -c 1 -W 3 " + hostname)
+    if response == 0:
+        print(hostname, 'is up!')
+    else:
+        print("Connection lost, stopped rover")
+        pub.publish(Twist())
+    rate.sleep()
 
 if __name__ == "__main__":
     rospy.init_node("connection_loss", anonymous=True)
