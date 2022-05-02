@@ -149,6 +149,8 @@ include_directories(
   add_executable(camfeed3 src/camfeed3.cpp)
   target_link_libraries(camfeed3 ${catkin_LIBRARIES})
   target_link_libraries(camfeed3 ${OpenCV_LIBRARIES})
+  add_executable(base_control src/base_control.cpp)
+  target_link_libraries(base_control ${catkin_LIBRARIES})
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
