@@ -13,7 +13,7 @@
 const int dirPin = 4; // can be 4 and 3 as well
 const int stepPin = 11; // can be 11 and 2 as well
 int stepp=0;
-const int stepsPerRevolution = 100;
+const int stepsPerRevolution = 6;
 
 int i=0;
 int j=0;
@@ -35,13 +35,13 @@ void callback(const geometry_msgs::Twist& msg)
   float bsrot2=msg.linear.y;
   if(bsrot2==1){
     digitalWrite(basedirection,LOW);//extension(blue-right) 
-    vel3 = 255;
+    vel3 = 255; //HALF
     i=2;
     k++;
   }
   else if(bsrot1==1){
     digitalWrite(basedirection,HIGH);//retraction
-    vel3 = 255;
+    vel3 = 255; //HALF
     i=1;
     k++;
   }
@@ -53,23 +53,23 @@ void callback(const geometry_msgs::Twist& msg)
   if(bevelrot1>0.9){
     digitalWrite(bevel_right_drn,LOW);//extension(blue-right)
     digitalWrite(bevel_left_drn,HIGH);
-    vel4 = 255;
-    vel5 = 255;
+    vel4 = 255; 
+    vel5 = 0;
     
     m=10;
   }
   else if(bevelrot1<-0.9){
     digitalWrite(bevel_right_drn,HIGH)  ;//extension(blue-right)
     digitalWrite(bevel_left_drn,LOW);
-    vel4 = 255;
-    vel5 = 255;
+    vel4 = 255; 
+    vel5 = 0;
    
     m=20;
   }
   else if(bevelrot2>0.9){
     digitalWrite(bevel_right_drn,HIGH);//extension(blue-right)
     digitalWrite(bevel_left_drn,HIGH);
-    vel4 = 255;
+    vel4 = 0;
     vel5 = 255;
  
     m=30;
@@ -77,8 +77,8 @@ void callback(const geometry_msgs::Twist& msg)
   else if(bevelrot2<-0.9){
     digitalWrite(bevel_right_drn,LOW);//extension(blue-right)
     digitalWrite(bevel_left_drn,LOW);
-    vel4 = 255;
-    vel5 = 255;
+    vel4 = 0;
+    vel5 = 255; 
   
 
     m=40;
@@ -102,9 +102,9 @@ void callback(const geometry_msgs::Twist& msg)
   for(int x = 0; x < stepsPerRevolution; x++)
   {
     digitalWrite(stepPin, HIGH);
-    delayMicroseconds(2000);
+    delayMicroseconds(4000);
     digitalWrite(stepPin, LOW);
-    delayMicroseconds(2000);
+    delayMicroseconds(4000);
   }
   }
   else if(steppermotor2==1){
@@ -115,14 +115,14 @@ void callback(const geometry_msgs::Twist& msg)
   for(int x = 0; x < stepsPerRevolution; x++)
   {
     digitalWrite(stepPin, HIGH);
-    delayMicroseconds(2000);
+    delayMicroseconds(4000);
     digitalWrite(stepPin, LOW);
-    delayMicroseconds(2000);
+    delayMicroseconds(4000);
   }
   }
-  analogWrite(baserotationpwm,(vel3/2)); 
-  analogWrite(bevel_right_pwm,(vel4/2));
-  analogWrite(bevel_left_pwm,(vel5/2));
+  analogWrite(baserotationpwm,(vel3)); //This has to be tuned
+  analogWrite(bevel_right_pwm,(vel4)); //This has to be tuned
+  analogWrite(bevel_left_pwm,(vel2)); //This has to be tuned
   vels.linear.x=0;
   vels.linear.y=i;
   vels.linear.z=stepp;

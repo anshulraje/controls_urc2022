@@ -13,7 +13,7 @@
 const int dirPin = 4; // can be 4 and 3 as well
 const int stepPin = 11; // can be 11 and 2 as well
 int stepp=0;
-const int stepsPerRevolution = 100;
+const int stepsPerRevolution = 200;
 
 int i=0;
 int j=0;
@@ -54,7 +54,7 @@ void callback(const geometry_msgs::Twist& msg)
     digitalWrite(bevel_right_drn,LOW);//extension(blue-right)
     digitalWrite(bevel_left_drn,HIGH);
     vel4 = 255;
-    vel5 = 255;
+    vel5 = 0;
     
     m=10;
   }
@@ -62,14 +62,14 @@ void callback(const geometry_msgs::Twist& msg)
     digitalWrite(bevel_right_drn,HIGH)  ;//extension(blue-right)
     digitalWrite(bevel_left_drn,LOW);
     vel4 = 255;
-    vel5 = 255;
+    vel5 = 0;
    
     m=20;
   }
   else if(bevelrot2>0.9){
     digitalWrite(bevel_right_drn,HIGH);//extension(blue-right)
     digitalWrite(bevel_left_drn,HIGH);
-    vel4 = 255;
+    vel4 = 0;
     vel5 = 255;
  
     m=30;
@@ -77,7 +77,7 @@ void callback(const geometry_msgs::Twist& msg)
   else if(bevelrot2<-0.9){
     digitalWrite(bevel_right_drn,LOW);//extension(blue-right)
     digitalWrite(bevel_left_drn,LOW);
-    vel4 = 255;
+    vel4 = 0;
     vel5 = 255;
   
 
@@ -120,9 +120,9 @@ void callback(const geometry_msgs::Twist& msg)
     delayMicroseconds(2000);
   }
   }
-  analogWrite(baserotationpwm,(vel3/2)); 
-  analogWrite(bevel_right_pwm,(vel4/2));
-  analogWrite(bevel_left_pwm,(vel5/2));
+  analogWrite(baserotationpwm,(vel3)); 
+  analogWrite(bevel_right_pwm,(vel4));
+  analogWrite(bevel_left_pwm,(vel2));
   vels.linear.x=0;
   vels.linear.y=i;
   vels.linear.z=stepp;

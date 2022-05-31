@@ -16,20 +16,20 @@ class Teleop{
     Teleop(){
       this->vel_pub = this->nh.advertise<geometry_msgs::Twist>("/rover", 20);
       this->color_pub = this->nh.advertise<std_msgs::Int32>("/led", 20);
-      this->sub = this->nh.subscribe("/joy", 20, &Teleop::joyCallback, this);
+      this->sub = this->nh.subscribe("/joy0", 20, &Teleop::joyCallback, this);
     }
 
-    void teleop(float linear, float rotational){
-      rover.linear.x = linear*0.25;
-      rover.angular.z = rotational*0.25;
+    void teleop(float linear, float rotational, float speed){
+      rover.linear.x = linear*((speed+1)/2);
+      rover.angular.z = rotational*((speed+1)/2);
       this->vel_pub.publish(rover);
     }
 
     void joyCallback(const sensor_msgs::Joy& msg){
       ros::Rate loop_rate(20); 
 
-      if(msg.axes[3]>0.1 || msg.axes[3] < -0.1 || msg.axes[4] > 0.1 || msg.axes[4] < -0.1){
-        this->teleop(msg.axes[4],msg.axes[3]);
+      if(msg.axes[1]>0.1 || msg.axes[1] < -0.1 || msg.axes[0] > 0.1 || msg.axes[0] < -0.1){
+        this->teleop(msg.axes[1],msg.axes[0],msg.axes[2]);
       }
       else{
         rover.linear.x = 0;
