@@ -6,13 +6,14 @@
 #include <Servo.h>
 Servo servo1;
 Servo servo2;
-Servo servo3;
-Servo servo4;
 
-#define DIR4 6               //connections to be checked
-#define PWM4 5
-#define DIR6 10                   //1 6inch 2 4inch
-#define PWM6 11
+#define DIR1 6               //connections to be checked
+#define PWM1 5
+#define DIR2 10                   //1 6inch 2 4inch
+#define PWM2 11
+#define DIR3 
+#define PWM3 12
+#define PWM4led 13
 #define POT1 A4
 
 #define servo1pin 9
@@ -21,8 +22,7 @@ Servo servo4;
 #define servo4pin 4
 
 float servo11,servo22,servo33;
-int servofun1=0;
-int servofun2=0;
+int servofun=0;
 
 
 int i=0;
@@ -45,19 +45,23 @@ int vel1,vel2,vel3,vel4,vel5;
 void callback(const geometry_msgs::Twist& msg)
 {
   int potent=analogRead(POT1);
-  float x = msg.linear.x;  //
+  float x = msg.linear.x;
   if(x>0.8){
-    digitalWrite(DIR4,LOW);//extension(blue-right) 
+    digitalWrite(DIR1,LOW);//extension(blue-right) 
     direction6inch=0;
     vel1 = 255;
     vel2=0;
+    vel3=0;
+    vel4=0;
     i=2;
   }
   else if(x<-0.8){
-    digitalWrite(DIR4,HIGH);//retraction
+    digitalWrite(DIR1,HIGH);//retraction
     direction6inch=1;
     vel1 = 255;
     vel2=0;
+    vel3=0;
+    vel4=0;
     i=1;
   }
   else{
@@ -65,73 +69,99 @@ void callback(const geometry_msgs::Twist& msg)
   }
   float y = msg.linear.y;// extension(tape right)
   if(y>0.8){
-    digitalWrite(DIR6,LOW);
+    digitalWrite(DIR2,LOW);
     direction6inch=0;
     vel2 = 255;
     vel1=0;
+    vel3=0;
+    vel4=0;
     i=2;
   }
   else if(y<-0.8){
-    digitalWrite(DIR6,HIGH);//retraction
+    digitalWrite(DIR2,HIGH);//retraction
     direction6inch=1;
     vel2 = 255;
     vel1=0;
+    vel3=0;
+    vel4=0;
     i=1;
   }
   else{
     vel2 = 0;
   }
+  float xy= msg.linear.z;
+  if(xy<-0.7){
+    vel3 = 255;
+    vel1=0;
+    vel2=0;
+    vel4=0;
+  }
+  else{
+    vel3=0;
+  }
+
+  float ledxy = msg.angular.z;
+  if(ledxy<-0.7){
+    vel4 = 255;
+    vel1=0;
+    vel2=0;
+    vel3=0;
+  }
+  else{
+    vel4=0;
+  }
   
   servo11=msg.angular.x;
   servo22=msg.angular.y;
   if(servo11==1){
-    servo1.write(120);
-    servofun1=1;
+    servo1.write(180);
+    delay(200);
+    servo1.write(90);
+    servofun=1;
   }
   else if(servo11==-1){
-    servo1.write(60);
-    servofun1=2;
+    servo1.write(0);
+    delay(200);
+    servo1.write(90);
+    servofun=2;
   }
   else{
     servo1.write(90);
-    servofun1=3;
+    servofun=3;
   }
   if(servo22==1){
-    servo3.write(120);
-    servofun2=4;
+    servo2.write(110);
+    servofun=4;
   }
   else if(servo22==-1){
-    servo3.write(60);
-    servofun2=5;
+    servo2.write(70);
+    servofun=5;
   }
   else{
-    servo3.write(90);
-    servofun2=6;
+    servo1.write(90);
+    servofun=6;
   }
   
+  
 
-  digitalWrite(PWM4,vel1);
-  digitalWrite(PWM6,vel2);
-  vels.angular.x=vel1;
-  vels.angular.y=vel2;
-  vels.linear.x=servofun1;
-  vels.linear.y=servofun2;
+  digitalWrite(PWM1,vel1);
+  digitalWrite(PWM2,vel2);
+  digitalWrite(PWM3,vel3);
+  digitalWrite(PWM4led,vel4);
+  vels.angular.x=vel2;
+  vels.angular.y=vel3;
+  vels.angular.z=vel4;
+  vels.linear.x=servofun;
 }
 ros::Subscriber<geometry_msgs::Twist> sub1("actuators", callback); 
 void setup(){
-  pinMode(DIR4,OUTPUT);
-  pinMode(PWM4,OUTPUT);
-  pinMode(DIR6,OUTPUT);
-  pinMode(PWM6,OUTPUT);
+  pinMode(DIR1,OUTPUT);
+  pinMode(PWM1,OUTPUT);
+  pinMode(DIR2,OUTPUT);
+  pinMode(PWM2,OUTPUT);
   pinMode(POT1,INPUT);
-/*  pinMode(9,OUTPUT);
-  digitalWrite(9,HIGH);
-  removed because pin for servo1 was permanently high*/
-
-  servo1.attach(9);
-  servo2.attach(8);
-  servo3.attach(7);
-  servo4.attach(4);
+  servo1.attach(2);
+  servo2.attach(3);
 
   n.initNode();
   n.subscribe(sub1);

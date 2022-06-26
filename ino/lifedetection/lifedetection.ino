@@ -13,7 +13,7 @@
 const int dirPin = 4; // can be 4 and 3 as well
 const int stepPin = 11; // can be 11 and 2 as well
 int stepp=0;
-const int stepsPerRevolution = 6;
+const int stepsPerRevolution = 200;
 
 int i=0;
 int j=0;

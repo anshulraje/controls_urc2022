@@ -12,7 +12,7 @@ int main(int argc, char** argv)
   image_transport::ImageTransport it(nh);
   image_transport::Publisher pub = it.advertise("video_frame3/image", 1);
 
-  int video_source = 4;
+  int video_source = 2;
 
   cv::VideoCapture cap(video_source);
   cap.set(cv::CAP_PROP_FRAME_WIDTH,640);

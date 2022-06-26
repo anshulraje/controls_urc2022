@@ -1,28 +1,26 @@
 #include <ArduinoHardware.h>
 #include <ros.h>
 #include <std_msgs/Int32.h>
+#include <Cytron_SmartDriveDuo.h>
 
 ros::NodeHandle nh;
 
-#define PWM_PIN 3
-#define DIR_PIN 2
+#define IN1 6 
+#define BAUDRATE 115200
+Cytron_SmartDriveDuo smartDriveDuo30(SERIAL_SIMPLFIED, IN1, BAUDRATE);
+int turn = 0;
 
 void callback(const std_msgs::Int32& msg){
     int command = msg.data;
     
-    if(command == 1){
-        digitalWrite(DIR_PIN, HIGH);
-        analogWrite(PWM_PIN, 51);
-    }
+    if(command == 1)
+      turn = 30;
 
-    else if(command == -1){
-        digitalWrite(DIR_PIN, LOW);
-        analogWrite(PWM_PIN, 51);
-    }
+    else if(command == -1)
+      turn = -30;
 
-    else{
-        analogWrite(PWM_PIN, 0);
-    }
+    else
+      turn = 0;
 }
 
 ros::Subscriber<std_msgs::Int32> sub("/base",&callback);
@@ -30,10 +28,9 @@ ros::Subscriber<std_msgs::Int32> sub("/base",&callback);
 void setup(){
     nh.initNode();
     nh.subscribe(sub);
-    pinMode(PWM_PIN, OUTPUT);
-    pinMode(DIR_PIN, OUTPUT);
 }
 
 void loop(){
+    smartDriveDuo30.control(turn,0);
     nh.spinOnce();
 }

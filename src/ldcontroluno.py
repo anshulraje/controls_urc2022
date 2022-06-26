@@ -31,8 +31,8 @@ def cb(data):
 
 rospy.init_node("joyinput",anonymous=True)
 # rate = rospy.Rate(20)
-pub=rospy.Publisher("othermotors2",Twist,queue_size=10)
+pub=rospy.Publisher("/othermotors2",Twist,queue_size=10)
 print("ok")
-sub=rospy.Subscriber("joy", Joy, cb)
+sub=rospy.Subscriber("/joy1", Joy, cb)
 rospy.spin()
 
