@@ -1,49 +1,53 @@
 #include <ArduinoHardware.h>
-#include <geometry_msgs/Twist.h>
-#include <ros.h>
+#include <Adafruit_Sensor.h>
 #include <Adafruit_BME280.h>
+#include <Wire.h>
+#include <SPI.h>
 
 #define SEALEVELPRESSURE_HPA (1013.25)
+#define BME_SCK 13
+#define BME_MISO 12
+#define BME_MOSI 11
+#define BME_CS 10
 
 Adafruit_BME280 bme;
 
-ros::NodeHandle nh;
-
-
-geometry_msgs::Twist data;
-ros::Publisher pub1("feedback", &data);
-
 void setup() {
-  nh.initNode();
-  nh.advertise(pub1);
+  Serial.begin(9600);
+  bme.begin();
 }
 
 void loop() {
-int valm, valt;
+  int valm, valt;
   int mappedValue;
   valm = analogRead(A0);
   
   mappedValue = map(valm,322,667,100,0);
-  data.linear.x = mappedValue;
+  Serial.print(mappedValue);
+  Serial.print(",");
 
   int temp_adc_val;
   float temp_val;
   temp_adc_val = analogRead(A1);  /* Read Temperature */
   temp_val = (temp_adc_val * 4.88); /* Convert adc value to equivalent voltage */
   temp_val = (temp_val/10); /* LM35 gives output of 10mv/°C */
-  data.linear.y = temp_val;
+  Serial.print(temp_val);
+  Serial.print(",");
 
-//  data.linear.z = (float)bme.readTemperature();
+  float temperature = (float)bme.readTemperature();
+  Serial.print(temperature);
+  Serial.print(",");
 
-//  data.angular.x = (float)bme.readPressure()/ 100.0F ;
+  float pressure = (float)bme.readPressure()/ 100.0F ;
+  Serial.print(pressure);
+  Serial.print(",");
 
-//  data.angular.y = (float)bme.readAltitude(SEALEVELPRESSURE_HPA);
+  float alti = (float)bme.readAltitude(SEALEVELPRESSURE_HPA);
+  Serial.print(alti);
+  Serial.print(",");
 
-//  data.angular.z= (float) bme.readHumidity();
-  
+  float humidity = (float) bme.readHumidity();
+  Serial.println(humidity);
 
-  pub1.publish(&data);
-  
-  delay(500);
-  nh.spinOnce();
+  delay(500); 
 }

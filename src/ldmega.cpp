@@ -16,16 +16,49 @@ class LDMega{
     }
 
     void joyCallback(const sensor_msgs::Joy& msg){
-      float ratchet = msg.axes[0];
-      float lead_screw = msg.axes[1];
+      float bucket_tilt_forward = msg.buttons[1];   //circle
+      float bucket_tilt_backward = msg.buttons[3];  //square
+      float cam1_forward = msg.axes[5];             //R2
+      float cam1_backward = msg.axes[2];            //L2
+      float cam2_forward = msg.buttons[5];          //R1
+      float cam2_backward = msg.buttons[4];         //L1
 
-      if(abs(ratchet) > 0.25)
-        ratchet = 1.0;
-			if(abs(lead_screw) > 0.25)
-				lead_screw = 1.0 * abs(lead_screw)/lead_screw;
+      if(bucket_tilt_forward == 1.0)
+        bucket_tilt_forward = 1.0;
+      else
+        bucket_tilt_forward = 0;
+        
+			if(bucket_tilt_backward == 1.0)
+				bucket_tilt_backward = 1.0;
+      else
+        bucket_tilt_backward = 0;
 
-			commands.linear.x = ratchet;
-			commands.linear.y = lead_screw;
+      if(cam1_forward < 0.5)
+        cam1_forward = 1;
+      else
+        cam1_forward = 0;
+
+      if(cam1_backward < 0.5)
+        cam1_backward = 1;
+      else
+        cam1_backward = 0;
+
+      if(cam2_forward == 1)
+        cam2_forward = 1;
+      else
+        cam2_forward = 0;
+
+      if(cam2_backward == 1)
+        cam2_backward = 1;
+      else
+        cam2_backward = 0;
+
+      commands.linear.x = bucket_tilt_forward;
+      commands.linear.y = bucket_tilt_backward;
+      commands.linear.z = cam1_forward;
+      commands.angular.x = cam1_backward;
+      commands.angular.y = cam2_forward;
+      commands.angular.z = cam2_backward;
 
       this->mega_pub.publish(commands);
     }
