@@ -1,7 +1,0 @@
-<launch>
-    <node name="camfeed1" pkg="urc2022" type="camfeed1"/>
-    <node name="camfeed2" pkg="urc2022" type="camfeed2"/>
-    <node name="camfeed3" pkg="urc2022" type="camfeed3"/>
-
-    <node type="rviz" name="rviz" pkg="rviz" args="-d $(find urc2022)/config/cameras.rviz"/>
-</launch>

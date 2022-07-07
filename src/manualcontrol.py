@@ -1,38 +1,81 @@
 #! /usr/bin/env python3
 
+from httplib2 import ServerNotFoundError
+from matplotlib.pyplot import flag
+from yaml import serialize
 import rospy
-from std_msgs.msg import *
 from sensor_msgs.msg import *
-from geometry_msgs.msg import *
+from std_msgs.msg import Int8
+servo_flag1=1
+servo_flag2=1
+enable_status=True
+
 
 def cb(data):
-    print("ok1")
+    global servo_flag1
+    global servo_flag2
+    global enable_status
+    print(f"callback_called_actuators")
     joy_value1=data.axes[0]
     joy_value2=data.axes[1]
-    joy_value3=data.axes[3]
-    joy_value4=data.axes[4]
-    servo1 = 0
-    servo2 = 0
-    obj = Twist()
+    joy_value3=data.buttons[4]
+    joy_value4=data.buttons[5] #pano servo
+    joy_value5=data.axes[2]
+    joy_value6=data.axes[5]
+    stepper_enable=data.buttons[12]
 
-    if(joy_value3>0.9 or joy_value3<-0.9):
-        servo1 = 1*joy_value3/abs(joy_value3)
-    if(joy_value4>0.9 or joy_value4<-0.9):
-        servo2 = 1*joy_value4/abs(joy_value4)
+    obj = Int8()
+    obj2 = Int8()
+    if(joy_value1>0.85):
+        obj.data=1
+    elif(joy_value1<-0.85):
+        obj.data=-1
+    elif(joy_value2>0.85):
+        obj.data=2
+    elif(joy_value2<-0.85):
+        obj.data=-2
+    elif(joy_value3>0.85):
+        obj.data=3
+    elif(joy_value4>0.85):
+        obj.data=-3
+    elif(joy_value5<-0.85):
+        if(servo_flag1==1):
+            obj.data=4
+            servo_flag1=0
+    elif(joy_value6<-0.85):
+        if(servo_flag2==1):
+            obj.data=-4
+            servo_flag2=0
+    elif(joy_value6==1 and joy_value5==1):
+        servo_flag2=1
+        servo_flag1=1
     
+    elif(stepper_enable==1):
+        if(enable_status==False):
+            enable_status=True
+            obj.data=5
+        elif(enable_status==True):
+            enable_status=False
+            obj.data=-5
+    else:
+        obj.data=0
 
-    obj.linear.x=joy_value1
-    obj.linear.y=joy_value2
-    obj.linear.z=1
-    obj.angular.x=servo1
-    obj.angular.y=servo2
-    obj.angular.z=1
     pub.publish(obj)
-    rate.sleep()
+
+    if(enable_status==False):
+        print("STEPPER IS ON!!!!!!!!!!!!!!!!!!!!!!!!")
+        obj2.data=11
+    elif(enable_status==True):
+        print("STEPPER IS OFF")
+        obj2.data=0
+    pub2.publish(obj2)
+
+    # rate.sleep()
 
 rospy.init_node("joyinput",anonymous=True)
-rate = rospy.Rate(20)
-pub=rospy.Publisher("actuators",Twist,queue_size=20)
-print("ok")
-sub=rospy.Subscriber("/joy1", Joy, cb, queue_size=20)
+# rate = rospy.Rate(20)
+pub=rospy.Publisher("actuators_topic",Int8,queue_size=20)
+pub2=rospy.Publisher("gripper_status",Int8,queue_size=10)
+print("actuators")
+sub=rospy.Subscriber("joy1", Joy, cb)
 rospy.spin()

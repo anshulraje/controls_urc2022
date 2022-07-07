@@ -1,7 +1,7 @@
 #include <MQ7.h>
 MQ7 mq7(A1,5.0);
 
-#include <CO2Sensor.h>
+#include <CO2Sensor.h>6 peices(298mm*19mm*19mm - 2, 353mm*19mm*19mm - 2, 340mm*19mm*19mm -2)d
 CO2Sensor co2Sensor(A2, 0.99, 100);
 
 #include <Adafruit_SI1145.h>
@@ -17,6 +17,7 @@ float R0 = 11.820;
 
 void setup() {
   Serial.begin(9600);
+  uv.begin();
   co2Sensor.calibrate();
 }
 
@@ -32,7 +33,7 @@ void loop() {
   double ppm = pow(10, ppm_log);                 //Convert ppm value to log scale
   double percentage = ppm / 10000;               //Convert to percentage
   
-  Serial.print(sensorValue);
+  Serial.print(ppm);
   Serial.print(",");
 
   float uvVisible = uv.readVisible();
