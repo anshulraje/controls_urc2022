@@ -25,7 +25,6 @@ def cb(data):
     stepper_enable=data.buttons[12]
 
     obj = Int8()
-    obj2 = Int8()
     if(joy_value1>0.85):
         obj.data=1
     elif(joy_value1<-0.85):
@@ -64,18 +63,14 @@ def cb(data):
 
     if(enable_status==False):
         print("STEPPER IS ON!!!!!!!!!!!!!!!!!!!!!!!!")
-        obj2.data=11
     elif(enable_status==True):
         print("STEPPER IS OFF")
-        obj2.data=0
-    pub2.publish(obj2)
 
     # rate.sleep()
 
 rospy.init_node("joyinput",anonymous=True)
 # rate = rospy.Rate(20)
 pub=rospy.Publisher("actuators_topic",Int8,queue_size=20)
-pub2=rospy.Publisher("gripper_status",Int8,queue_size=10)
 print("actuators")
-sub=rospy.Subscriber("joy1", Joy, cb)
+sub=rospy.Subscriber("joy", Joy, cb)
 rospy.spin()
