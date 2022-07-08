@@ -1,45 +1,35 @@
 #include <ros.h>
-#include <sensor_msgs/Joy.h>
-#include <std_msgs/String.h>
-#include <geometry_msgs/Point.h>
-#include <geometry_msgs/Twist.h>
+#include <std_msgs/Int8.h>
 
 #define baserotationpwm 6
 #define basedirection 7
 #define bevel_right_pwm 10
-#define bevel_left_pwm  9
 #define bevel_right_drn 5
+#define bevel_left_pwm  9
 #define bevel_left_drn  12
 const int dirPin = 4; // can be 4 and 3 as well
 const int stepPin = 11; // can be 11 and 2 as well
 int stepp=0;
-const int stepsPerRevolution = 100;
+const int stepsPerRevolution = 50;
 
 int i=0;
 int j=0;
 int k=0;
 int m=0;
-int potent=0;
-int maxl=0;
-int minl=0;
 ros::NodeHandle n;
-geometry_msgs::Twist vels;
-
-ros::Publisher pub1("velocitieso", &vels);
-
+std_msgs::Int8 vels;
 int vel1,vel2,vel3,vel4,vel5;
 
-void callback(const geometry_msgs::Twist& msg)
+void callback(const std_msgs::Int8& msg)
 {
-  float bsrot1=msg.linear.x;
-  float bsrot2=msg.linear.y;
-  if(bsrot2==1){
+  int8_t value_given=msg.data;
+  if(value_given==-1){
     digitalWrite(basedirection,LOW);//extension(blue-right) 
     vel3 = 255;
     i=2;
     k++;
   }
-  else if(bsrot1==1){
+  else if(value_given==1){
     digitalWrite(basedirection,HIGH);//retraction
     vel3 = 255;
     i=1;
@@ -47,10 +37,9 @@ void callback(const geometry_msgs::Twist& msg)
   }
   else{
     vel3=0;
+    digitalWrite(basedirection,LOW);
   }
-  float bevelrot1=msg.linear.z;
-  float bevelrot2=msg.angular.z;
-  if(bevelrot1>0.9){
+  if(value_given==2){
     digitalWrite(bevel_right_drn,LOW);//extension(blue-right)
     digitalWrite(bevel_left_drn,HIGH);
     vel4 = 255;
@@ -58,7 +47,7 @@ void callback(const geometry_msgs::Twist& msg)
     
     m=10;
   }
-  else if(bevelrot1<-0.9){
+  else if(value_given==-2){
     digitalWrite(bevel_right_drn,HIGH)  ;//extension(blue-right)
     digitalWrite(bevel_left_drn,LOW);
     vel4 = 255;
@@ -66,7 +55,7 @@ void callback(const geometry_msgs::Twist& msg)
    
     m=20;
   }
-  else if(bevelrot2>0.9){
+  else if(value_given==3){
     digitalWrite(bevel_right_drn,HIGH);//extension(blue-right)
     digitalWrite(bevel_left_drn,HIGH);
     vel4 = 255;
@@ -74,7 +63,7 @@ void callback(const geometry_msgs::Twist& msg)
  
     m=30;
   }
-  else if(bevelrot2<-0.9){
+  else if(value_given==-3){
     digitalWrite(bevel_right_drn,LOW);//extension(blue-right)
     digitalWrite(bevel_left_drn,LOW);
     vel4 = 255;
@@ -90,11 +79,8 @@ void callback(const geometry_msgs::Twist& msg)
     digitalWrite(bevel_left_drn,LOW);
     m=100;
   }
-  float steppermotor1=0;
-  float steppermotor2=0;
-  steppermotor1=msg.angular.x;
-  steppermotor2=msg.angular.y;
-  if(steppermotor1==1){
+  
+  if(value_given==4){
       digitalWrite(dirPin, HIGH);
       stepp=101;
 
@@ -102,12 +88,12 @@ void callback(const geometry_msgs::Twist& msg)
   for(int x = 0; x < stepsPerRevolution; x++)
   {
     digitalWrite(stepPin, HIGH);
-    delayMicroseconds(2000);
+    delayMicroseconds(500);
     digitalWrite(stepPin, LOW);
-    delayMicroseconds(2000);
+    delayMicroseconds(500);
   }
   }
-  else if(steppermotor2==1){
+  else if(value_given==-4){
   digitalWrite(dirPin, LOW);
   stepp=200;
 
@@ -115,23 +101,16 @@ void callback(const geometry_msgs::Twist& msg)
   for(int x = 0; x < stepsPerRevolution; x++)
   {
     digitalWrite(stepPin, HIGH);
-    delayMicroseconds(2000);
+    delayMicroseconds(500);
     digitalWrite(stepPin, LOW);
-    delayMicroseconds(2000);
+    delayMicroseconds(500);
   }
   }
   analogWrite(baserotationpwm,(vel3/2)); 
   analogWrite(bevel_right_pwm,(vel4/2));
   analogWrite(bevel_left_pwm,(vel5/2));
-  vels.linear.x=0;
-  vels.linear.y=i;
-  vels.linear.z=stepp;
-
-  vels.angular.x=vel4;
-  vels.angular.y=vel5;
-  vels.angular.z=vel3;
 }
-ros::Subscriber<geometry_msgs::Twist> sub1("othermotors2", callback); 
+ros::Subscriber<std_msgs::Int8> sub1("othermotors_topic", callback); 
 void setup(){
   pinMode(baserotationpwm,OUTPUT);
   pinMode(basedirection,OUTPUT);
@@ -144,11 +123,8 @@ void setup(){
 
   n.initNode();
   n.subscribe(sub1);
-  n.advertise(pub1);
 }
 
 void loop(){
-  
-  pub1.publish(&vels);
   n.spinOnce();
 }

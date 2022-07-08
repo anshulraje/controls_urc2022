@@ -40,7 +40,7 @@ def cb(data):
 
 rospy.init_node("othermotors",anonymous=False)
 # rate = rospy.Rate(60) # in hertz
-sub=rospy.Subscriber("joy1", Joy, cb)
+sub=rospy.Subscriber("joy", Joy, cb)
 pub=rospy.Publisher("othermotors_topic",Int8,queue_size=10)
 print("othermotors")
 rospy.spin()
