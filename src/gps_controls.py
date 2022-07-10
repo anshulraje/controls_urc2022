@@ -36,11 +36,11 @@ class RootClient(object):
             self.set_gps = True
             self.cur_east, self.cur_north, _, _ = utm.from_latlon(msg.latitude, msg.longitude)
 
-    def main(self, goal_x, goal_y):
+    def main(self, goal_x, goal_y, start_east, start_nort):
 
         r = rospy.Rate(10)
-        self.start_east = self.cur_east
-        self.start_north = self.cur_north
+        self.start_east = start_east
+        self.start_north = start_nort
 
         plt_goalx = goal_x - self.cur_east
         plt_goaly = goal_y - self.cur_north
@@ -67,11 +67,11 @@ if __name__ == "__main__":
     goal_x = [0]
     goal_y = [0]
 
-    co_file = open("/home/anshulraje/catkin_ws/src/urc2022/src/root_cont_coordinates.txt","r")
+    co_file = open("/home/anshulraje/Desktop/root_cont_coordinates.txt","r")
     lines = co_file.readlines()
 
-    start_lat = 38.40654368
-    start_lon = -110.7914905
+    start_lat = 38.9948541
+    start_lon = -110.1614736
 
     start_east, start_nort, start_reg, start_reg_char=utm.from_latlon(start_lat, start_lon)
     for line in lines:
@@ -84,7 +84,7 @@ if __name__ == "__main__":
     print(goal_x)
     print(goal_y)
 
-    root.main(goal_x, goal_y)
+    root.main(goal_x, goal_y, start_east, start_nort)
     rospy.spin()
     rospy.logwarn("Killing!")
 
