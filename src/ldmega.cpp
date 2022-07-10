@@ -12,7 +12,7 @@ class LDMega{
   public:
     LDMega(){
       this->mega_pub = this->nh.advertise<geometry_msgs::Twist>("/ldmega", 20);
-      this->sub = this->nh.subscribe("/joy", 20, &LDMega::joyCallback, this);
+      this->sub = this->nh.subscribe("/joy1", 20, &LDMega::joyCallback, this);
     }
 
     void joyCallback(const sensor_msgs::Joy& msg){

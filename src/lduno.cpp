@@ -12,7 +12,7 @@ class LDUno{
   public:
     LDUno(){
       this->uno_pub = this->nh.advertise<geometry_msgs::Point>("/lduno", 20);
-      this->sub = this->nh.subscribe("/joy", 20, &LDUno::joyCallback, this);
+      this->sub = this->nh.subscribe("/joy1", 20, &LDUno::joyCallback, this);
     }
 
     void joyCallback(const sensor_msgs::Joy& msg){
