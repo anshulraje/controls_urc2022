@@ -3,7 +3,7 @@ import serial
 
 arduino_port = "/dev/ttyACM0"
 baud = 9600
-fileName="uno-data.csv"
+fileName="/home/anshulraje/catkin_ws/src/urc2022/src/uno-data.csv"
 
 ser = serial.Serial(arduino_port, baud)
 print("Connected to Arduino port:" + arduino_port)
@@ -18,8 +18,8 @@ while line <= samples:
     # if len(incoming) > 0:
     if print_labels:
         if line==0:
-            print("Methane PPM, Visible, IR, UV, CO2, CO PPM:")
-            file.write("Methane PPM, Visible, IR, UV, CO2, CO PPM:" + "\n")
+            print("Methane PPM, Visible, IR, UV, CO2 PPM, CO PPM:")
+            file.write("Methane PPM, Visible, IR, UV, CO2 PPM, CO PPM:" + "\n")
         else:
             print("Line " + str(line) + ": writing...")
     getData=str(ser.readline())

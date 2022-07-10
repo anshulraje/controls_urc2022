@@ -3,7 +3,7 @@ import serial
 
 arduino_port = "/dev/ttyUSB0"
 baud = 9600
-fileName="nano-data.csv"
+fileName="/home/anshulraje/catkin_ws/src/urc2022/src/nano-data.csv"
 
 ser = serial.Serial(arduino_port, baud)
 print("Connected to Arduino port:" + arduino_port)

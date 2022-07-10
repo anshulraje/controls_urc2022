@@ -32,6 +32,7 @@ def cb(data):
     stepper_enable=data.buttons[11]
 
     obj = Int8()
+
     if(joy_value1>0.85):
         obj.data=1
     elif(joy_value1<-0.85):
@@ -40,22 +41,27 @@ def cb(data):
         obj.data=2
     elif(joy_value2<-0.85):
         obj.data=-2
+
+
     elif(joy_value3>0.85):
         if(servo_flag3==1):
-            obj.data=3
+            obj.data=-3
             servo_flag3=0
     elif(joy_value3<-0.85):
         if(servo_flag4>0.85):
-            obj.data=-3
+            obj.data=3
             servo_flag4=0
+
     elif(joy_value4<-0.85):
         if(servo_flag1==1):
-            obj.data=4
+            obj.data=-4
             servo_flag1=0
     elif(joy_value4>0.85):
         if(servo_flag2==1):
-            obj.data=-4
+            obj.data=4
             servo_flag2=0
+
+
 
     elif(stepper_enable==1):
         if(enable_status==False):
@@ -65,12 +71,13 @@ def cb(data):
             enable_status=False
             obj.data=-5
     
-    elif(joy_value6==1 and joy_value5==1):
-        servo_flag2=1
-        servo_flag1=1
+        
     elif(joy_value3==0 and joy_value4==0):
         servo_flag3=1
         servo_flag4=1 
+        servo_flag2=1
+        servo_flag1=1
+
     else:
         obj.data=0
 

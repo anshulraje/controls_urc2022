@@ -14,5 +14,7 @@ def decoder(image):
 
 cap = cv2.VideoCapture(0)
 while not rospy.is_shutdown():
+    rate = rospy.Rate(20)
     ret, frame = cap.read()
     decoder(frame)
+    rate.sleep()
