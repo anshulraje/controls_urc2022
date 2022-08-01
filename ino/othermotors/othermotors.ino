@@ -35,6 +35,18 @@ void callback(const std_msgs::Int8& msg)
     i=1;
     k++;
   }
+  else if(value_given==5){
+    digitalWrite(basedirection,LOW);//extension(blue-right) 
+    vel3 = 80;
+    i=2;
+    k++;
+  }
+  else if(value_given==-5){
+    digitalWrite(basedirection,HIGH);//retraction
+    vel3 = 80;
+    i=1;
+    k++;
+  }
   else{
     vel3=0;
     digitalWrite(basedirection,LOW);
@@ -55,11 +67,35 @@ void callback(const std_msgs::Int8& msg)
    
     m=20;
   }
+  else if(value_given==-7){
+    digitalWrite(bevel_right_drn,HIGH)  ;//extension(blue-right)
+    digitalWrite(bevel_left_drn,LOW);
+    vel4 = 100;
+    vel5 = 100;
+   
+    m=20;
+  }
+  else if(value_given==7){
+    digitalWrite(bevel_right_drn,LOW);//extension(blue-right)
+    digitalWrite(bevel_left_drn,HIGH);
+    vel4 = 100;
+    vel5 = 100;
+    
+    m=10;
+  }
   else if(value_given==3){
     digitalWrite(bevel_right_drn,HIGH);//extension(blue-right)
     digitalWrite(bevel_left_drn,HIGH);
     vel4 = 255;
     vel5 = 255;
+ 
+    m=30;
+  }
+  else if(value_given==8){
+    digitalWrite(bevel_right_drn,HIGH);//extension(blue-right)
+    digitalWrite(bevel_left_drn,HIGH);
+    vel4 = 100;
+    vel5 = 100;
  
     m=30;
   }
@@ -72,6 +108,15 @@ void callback(const std_msgs::Int8& msg)
 
     m=40;
   }
+  else if(value_given==-8){
+    digitalWrite(bevel_right_drn,LOW);//extension(blue-right)
+    digitalWrite(bevel_left_drn,LOW);
+    vel4 = 100;
+    vel5 = 100;
+  
+
+    m=40;
+  }
   else{
     vel4 = 0;
     vel5 = 0;
@@ -79,7 +124,6 @@ void callback(const std_msgs::Int8& msg)
     digitalWrite(bevel_left_drn,LOW);
     m=100;
   }
-  
   if(value_given==4){
       digitalWrite(dirPin, HIGH);
       stepp=101;
@@ -106,7 +150,7 @@ void callback(const std_msgs::Int8& msg)
     delayMicroseconds(500);
   }
   }
-  analogWrite(baserotationpwm,(vel3/2)); 
+  analogWrite(baserotationpwm,(vel3)); 
   analogWrite(bevel_right_pwm,(vel4/2));
   analogWrite(bevel_left_pwm,(vel5/2));
 }

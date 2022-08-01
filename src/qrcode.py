@@ -12,11 +12,13 @@ def decoder(image):
         barcodeData = obj.data.decode("utf-8")
         print("Barcode: "+barcodeData)
 
-cap = cv2.VideoCapture(0)
 
 if __name__ == "__main__":
     rospy.init_node("qrcode", anonymous=True)
     print("Ready!")
+    print("Enter Video Number: ")
+    inp = int(input())
+    cap = cv2.VideoCapture(inp)
     while not rospy.is_shutdown():
         rate = rospy.Rate(20)
         ret, frame = cap.read()

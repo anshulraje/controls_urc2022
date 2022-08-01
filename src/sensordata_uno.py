@@ -1,14 +1,23 @@
 #!/usr/bin/env python3
 import serial
+import os
+import datetime
 
-arduino_port = "/dev/ttyACM0"
+arduino_port = "/dev/ttyACM3"
 baud = 9600
-fileName="/home/anshulraje/catkin_ws/src/urc2022/src/uno-data.csv"
+print("Enter Site Number:")
+inp = str(input())
+fileName="/home/kratos/catkin_ws/src/urc2022/csv_data/site"+inp+"/uno-data"+inp+".csv"
 
 ser = serial.Serial(arduino_port, baud)
 print("Connected to Arduino port:" + arduino_port)
 file = open(fileName, "w")
 print("Created file")
+
+current_time = str(datetime.datetime.now())
+print("Current Time: " + current_time)
+file.write(current_time + "\n")
+file.flush()
 
 samples = 10 #how many samples to collect
 print_labels = True
@@ -28,7 +37,10 @@ while line <= samples:
 
     #file = open(fileName, "a")
     file.write(data + "\n") #write data with a newline
+    file.flush()
     line = line+1
 
 print("Data collection complete!")
 file.close()
+
+os.system("scp /home/kratos/catkin_ws/src/urc2022/csv_data/site"+inp+"/uno-data"+inp+".csv anshulraje@192.168.1.11:/home/anshulraje/Desktop/csv_data/site"+inp)
