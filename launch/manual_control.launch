@@ -9,7 +9,7 @@
         <param name="dev" type="string" value="/dev/input/js1" />
     </node>
 
-    <node name="teleop" pkg="urc2022" type="teleop"/> 
-    <node name="othermotors" pkg="urc2022" type="othermotors.py"/>
-    <node name="manualcontrol" pkg="urc2022" type="manualcontrol.py"/>
+    <node name="teleop" pkg="urc2022" type="teleop"/>
+    <node name="manualcontrol" pkg="urc2022" type="manualcontrol.py" output="screen" launch-prefix="xterm -e"/>
+    <node name="othermotors" pkg="urc2022" type="othermotors.py" output="screen" launch-prefix="xterm -e"/>
 </launch>

@@ -37,14 +37,14 @@ void callback(const geometry_msgs::Twist& msg){
 
   if(cam1_f){
     cam1.write(105);
-/*    delay(200);
-    cam1.write(90);*/  
+    delay(200);
+    cam1.write(90);  
     feedback.linear.z = 1;
   }
   else if(cam1_b){
     cam1.write(75);
-/*    delay(200);
-    cam1.write(90);*/ 
+    delay(200);
+    cam1.write(90); 
     feedback.angular.x = 1;
   }
   else
@@ -52,14 +52,14 @@ void callback(const geometry_msgs::Twist& msg){
 
   if(cam2_f){
     cam2.write(105);
-/*    delay(200);
-    cam2.write(90);*/
+    delay(200);
+    cam2.write(90);
     feedback.angular.y = 1;  
   }
   else if(cam2_b){
     cam2.write(75);
-/*    delay(200);
-    cam2.write(90);*/ 
+    delay(200);
+    cam2.write(90);
     feedback.angular.z = 1;
   }
   else

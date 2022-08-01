@@ -48,8 +48,6 @@ def cb(data):
     joy_value6=data.axes[5]
     stepper_enable=data.buttons[11]
     actuator_speed_change=data.buttons[5]
-    bucket_fwd = data.buttons[8]
-    bucket_bck = data.buttons[9]
 
     obj = Int8()
 
@@ -69,7 +67,7 @@ def cb(data):
         obj.data=-actuator1(actuatorspeed)
 
 
-    elif(joy_value3==1):
+    elif(joy_value3>0.85):
         if(servo_flag3==1):
             obj.data=-3
             servo_flag3=0
@@ -96,11 +94,6 @@ def cb(data):
         elif(enable_status==True):
             enable_status=False
             obj.data=-5
-
-    elif(bucket_fwd):
-        obj.data =6
-    elif(bucket_bck):
-        obj.data =-6
 
     else:
         obj.data=0

@@ -4,18 +4,18 @@
 #include <std_msgs/Int8.h>
 
 geometry_msgs::Twist rover;
-std_msgs::Int8 led;
+//std_msgs::Int8 led;
 
 class Teleop{
   private:
     ros::NodeHandle nh;
     ros::Publisher vel_pub;
-    ros::Publisher color_pub;
+    //ros::Publisher color_pub;
     ros::Subscriber sub;
   public:
     Teleop(){
       this->vel_pub = this->nh.advertise<geometry_msgs::Twist>("/rover", 20);
-      this->color_pub = this->nh.advertise<std_msgs::Int8>("/led", 20);
+      //this->color_pub = this->nh.advertise<std_msgs::Int8>("/led", 20);
       this->sub = this->nh.subscribe("/joy0", 20, &Teleop::joyCallback, this);
     }
 
@@ -36,8 +36,8 @@ class Teleop{
         rover.angular.z = 0;
         this->vel_pub.publish(rover);
       }
-      led.data = 0;
-      this->color_pub.publish(led);
+      // led.data = 0;
+      // this->color_pub.publish(led);
       loop_rate.sleep();
     }
 };

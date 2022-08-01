@@ -7,11 +7,6 @@ from geometry_msgs import *
 import time
 import beepy
 
-servo_flag1=1
-servo_flag2=1 #trigger servo
-
-servo_flag3=1
-servo_flag4=1 #button servo
 
 
 enable_status=True
@@ -30,11 +25,6 @@ def actuator1(actuatorspeed):
 
 
 def cb(data):
-    global servo_flag1
-    global servo_flag2
-    global servo_flag3
-    global servo_flag4
-
     global enable_status
 
     global actuatorspeed
@@ -48,8 +38,6 @@ def cb(data):
     joy_value6=data.axes[5]
     stepper_enable=data.buttons[11]
     actuator_speed_change=data.buttons[5]
-    bucket_fwd = data.buttons[8]
-    bucket_bck = data.buttons[9]
 
     obj = Int8()
 
@@ -69,23 +57,15 @@ def cb(data):
         obj.data=-actuator1(actuatorspeed)
 
 
-    elif(joy_value3==1):
-        if(servo_flag3==1):
+    elif(joy_value3>0.85):
             obj.data=-3
-            servo_flag3=0
     elif(joy_value3<-0.85):
-        if(servo_flag4==1):
             obj.data=3
-            servo_flag4=0
 
     elif(joy_value4<-0.85):
-        if(servo_flag1==1):
             obj.data=-4
-            servo_flag1=0
     elif(joy_value4>0.85):
-        if(servo_flag2==1):
             obj.data=4
-            servo_flag2=0
 
 
 
@@ -97,19 +77,8 @@ def cb(data):
             enable_status=False
             obj.data=-5
 
-    elif(bucket_fwd):
-        obj.data =6
-    elif(bucket_bck):
-        obj.data =-6
-
     else:
         obj.data=0
-
-    if(joy_value3==0 and joy_value4==0):
-        servo_flag3=1
-        servo_flag4=1 
-        servo_flag2=1
-        servo_flag1=1
 
     pub.publish(obj)
 
