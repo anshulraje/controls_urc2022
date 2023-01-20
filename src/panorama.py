@@ -1,7 +1,19 @@
 from re import M
 import cv2
 import os
+import rospy
+from sensor_msgs.msg import NavSatFix
+gps_msg=NavSatFix()
+first_gps=False
+def gps_callback(msg):
+    global first_gps
+    global gps_msg
+    gps_msg=msg
+    first_gps=True
 
+gps_sub=rospy.Subscriber("/gps_node/fix", NavSatFix, gps_callback,queue_size=10)
+while not first_gps:
+    print("Either there is no gps subscription or there is a problem in gps_calback()",end="\r")
 from cv2 import Stitcher
 currdir=os.getcwd()
 try:
