@@ -3,6 +3,20 @@ import cv2
 import threading
 import os
 import time
+import rospy
+from sensor_msgs.msg import NavSatFix
+rospy.init_node("site_captures")
+gps_msg=NavSatFix()
+first_gps=False
+def gps_callback(msg):
+    global first_gps
+    global gps_msg
+    gps_msg=msg
+    first_gps=True
+
+gps_sub=rospy.Subscriber("/gps_node/fix", NavSatFix, gps_callback,queue_size=10)
+while not first_gps:
+    print("Either there is no gps subscription or there is a problem in gps_calback()",end="\r")
 timenow=time.time()
 currdir=os.getcwd()
 try:
@@ -53,7 +67,7 @@ def capture_image():
                     # image_lined=cv2.line(image_lined,(startpoint,(48*5)),((startpoint+(73*3)),(48*5)),(255,255,255),1)
                     # image_lined=cv2.line(image_lined,(startpoint,(48*7)),((startpoint+(102*3)),(48*7)),(255,255,255),1)
                     # image_lined=cv2.line(image_lined,(startpoint,(48*9)),((startpoint+(116*3)),(48*9)),(255,255,255),1)
-                    image_lined = cv2.putText(image_lined, 'Scale: 60 cms',(20,(48*9+30)),cv2.FONT_HERSHEY_SIMPLEX,0.8,(255,255,255),1, cv2.LINE_AA)
+                    image_lined = cv2.putText(image_lined, "lat: %s lon%s"%(gps_msg.latitude,gps_msg.longitude),(20,(48*9+30)),cv2.FONT_HERSHEY_SIMPLEX,0.8,(255,255,255),1, cv2.LINE_AA)
                     # image_lined = cv2.putText(image_lined, '60 cms',(20,(48*7+30)),cv2.FONT_HERSHEY_SIMPLEX,0.8,(255,255,255),1, cv2.LINE_AA)
                     # image_lined = cv2.putText(image_lined, '60 cms',(20,(48*5+30)),cv2.FONT_HERSHEY_SIMPLEX,0.8,(255,255,255),1, cv2.LINE_AA)
                     # image_lined = cv2.putText(image_lined, '60 cms',(20,(48*3+30)),cv2.FONT_HERSHEY_SIMPLEX,0.8,(255,255,255),1, cv2.LINE_AA)
