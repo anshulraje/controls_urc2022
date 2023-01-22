@@ -26,7 +26,7 @@ class Teleop{
     }
 
     void joyCallback(const sensor_msgs::Joy& msg){
-      ros::Rate loop_rate(20); 
+      // ros::Rate loop_rate(20); 
 
       if(msg.axes[1]>0.1 || msg.axes[1] < -0.1 || msg.axes[0] > 0.1 || msg.axes[0] < -0.1){
         this->teleop(msg.axes[1],msg.axes[0],msg.axes[2]);
@@ -38,7 +38,7 @@ class Teleop{
       }
       // led.data = 0;
       // this->color_pub.publish(led);
-      loop_rate.sleep();
+      // loop_rate.sleep();
     }
 };
 

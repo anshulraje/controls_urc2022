@@ -7,7 +7,7 @@ ros::NodeHandle nh;
 
 #define IN1 6 
 #define BAUDRATE 115200
-Cytron_SmartDriveDuo smartDriveDuo30(SERIAL_SIMPLFIED, IN1, BAUDRATE);
+Cytron_SmartDriveDuo smartDriveDuo30(SERIAL_SIMPLIFIED, IN1, BAUDRATE);
 geometry_msgs::Twist vels;
 ros::Publisher pub1("feedback", &vels);
 
